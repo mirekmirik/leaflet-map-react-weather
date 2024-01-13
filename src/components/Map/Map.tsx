@@ -27,6 +27,7 @@ import DrawerWeather from "../Drawer/DrawerWeather";
 import { useAppDispatch } from "src/store/hooks";
 import { setShowDrawer } from "src/store/drawer/drawerSlice";
 import ButtonTempToggle from "../ButtonTempToggle/ButtonTempToggle";
+import { Progress } from "../ui/progress/progress";
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
@@ -43,6 +44,17 @@ const Map = () => {
   const [weatherOfCities, setWeatherOfCities] = useState<WeatherOfPlace[]>([]);
   const [isTransformed, setIsTransformed] = useState(false);
   const dispatch = useAppDispatch();
+
+  const [progress, setProgress] = useState(13);
+
+  useEffect(() => {
+    let timer: any = 0;
+    if (!isTransformed) {
+      timer = setTimeout(() => setProgress(66), 500);
+    }
+    timer = setTimeout(() => setProgress(100), 1000);
+    return () => clearTimeout(timer);
+  }, [isTransformed]);
 
   useEffect(() => {
     getInitialFetchWeather();
@@ -518,7 +530,11 @@ const Map = () => {
     }
   });
 
-  return (
+  return !isTransformed ? (
+    <div className="h-screen flex items-center justify-center">
+      <Progress value={progress} className="w-[60%]" />
+    </div>
+  ) : (
     <div className="flex flex-row h-screen w-full">
       <MapContainer
         id="leaflet-map"

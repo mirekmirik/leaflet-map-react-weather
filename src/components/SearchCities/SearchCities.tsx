@@ -9,6 +9,7 @@ import { Separator } from "../ui/separator/separator";
 import { WeatherOfPlace } from "src/api/weather/types";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
 import {
+  getSearchInputSelector,
   setShowInput,
 } from "src/store/searchInput/searchInputSlice";
 import { setShowDrawer } from "src/store/drawer/drawerSlice";
@@ -31,7 +32,9 @@ const SearchCities: React.FC<SearchCitiesProps> = ({ onAddNewPlace }) => {
 
   const isWasTypingRef = useRef<boolean>(false);
   const dispatch = useAppDispatch();
-  const { isShowInput } = useAppSelector((state) => state.searchInput);
+  const isShowInput = useAppSelector(
+    (rootState) => getSearchInputSelector(rootState).isShowInput
+  );
 
   useEffect(() => {
     if (!word.trim().length) {
@@ -55,7 +58,7 @@ const SearchCities: React.FC<SearchCitiesProps> = ({ onAddNewPlace }) => {
     }, 1000);
     return () => clearTimeout(delayDebounceFn);
   }, [word]);
-  
+
   const hideInput = () => {
     dispatch(setShowInput(true));
     dispatch(setShowDrawer(false));
@@ -72,10 +75,7 @@ const SearchCities: React.FC<SearchCitiesProps> = ({ onAddNewPlace }) => {
           data-value="search-cities"
         />
         {isWasTypingRef.current && !isLoading && isShowInput ? (
-          <CitiesList
-            cities={cities.data}
-            onAddNewPlace={onAddNewPlace}
-          />
+          <CitiesList cities={cities.data} onAddNewPlace={onAddNewPlace} />
         ) : null}
         {isLoading &&
           Array.from({ length: 5 }, (_, i) => (

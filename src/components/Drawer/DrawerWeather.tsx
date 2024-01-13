@@ -9,7 +9,11 @@ import { WeatherOfPlace } from "src/api/weather/types";
 import CardWeather from "./CardWeather/CardWeather";
 import { getFetchHourlyWeather } from "src/api/weather/weather";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
-import { setShowDrawer, setWeathers } from "src/store/drawer/drawerSlice";
+import {
+  getDrawerSelector,
+  setShowDrawer,
+  setWeathers,
+} from "src/store/drawer/drawerSlice";
 import moment from "moment";
 import { Button } from "../ui/button/button";
 import CloseIcon from "../icons/CloseIcon";
@@ -21,21 +25,21 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "../ui/carousel/carousel";
+import { UNSAFE_DataRouterStateContext } from "react-router-dom";
 
 interface DrawerWeatherProps {
   weatherOfPlace: WeatherOfPlace;
 }
 
 const DrawerWeather: React.FC<DrawerWeatherProps> = ({ weatherOfPlace }) => {
-  const { drawer } = useAppSelector((state) => state);
+  const drawer = useAppSelector((rootState) => getDrawerSelector(rootState));
   const dispatch = useAppDispatch();
   const [date, setDate] = useState("");
   const [api, setApi] = React.useState<CarouselApi>();
   const [lengthData, setLengthData] = useState(0);
-  
+
   const minLengthData = drawer.weathers.cnt / 5;
   const maxLengthData = drawer.weathers.cnt;
-
 
   useEffect(() => {
     setLengthData(minLengthData);
@@ -43,7 +47,7 @@ const DrawerWeather: React.FC<DrawerWeatherProps> = ({ weatherOfPlace }) => {
 
   useEffect(() => {
     setDate(moment().format("L"));
-  }, [drawer.weathers]);
+  }, [drawer.weathers, minLengthData]);
 
   const setFirstSlide = () => {
     if (api?.canScrollPrev()) {
@@ -76,7 +80,7 @@ const DrawerWeather: React.FC<DrawerWeatherProps> = ({ weatherOfPlace }) => {
       }
     };
     getHourlyWeathers();
-  }, [weatherOfPlace]);
+  }, [weatherOfPlace, drawer.isShowDrawer, dispatch]);
 
   const mapWeathers = (date: string) => {
     const todayFormat = date.split("/")[1];
@@ -120,8 +124,10 @@ const DrawerWeather: React.FC<DrawerWeatherProps> = ({ weatherOfPlace }) => {
         </div>
         <div className="flex items-center justify-center gap-8">
           <div className="lg:flex hidden flex-row gap-3">
-            {mapWeathers(date)?.map((weather) => (
-              <CardWeather mainInfoOfWeather={weather} />
+            {mapWeathers(date)?.map((weather, i) => (
+              <div key={i}>
+                <CardWeather mainInfoOfWeather={weather} />
+              </div>
             ))}
           </div>
 

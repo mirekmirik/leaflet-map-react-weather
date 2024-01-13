@@ -541,9 +541,9 @@ const Map = () => {
 
         {geoJSON && isTransformed && <GeoJSON data={geoJSON} style={style} />}
         <MovingMarker />
-        {weatherOfCities?.map((data) => {
+        {weatherOfCities?.map((data, i) => {
           return (
-            <Marker position={[data.coord.lat, data.coord.lon]}>
+            <Marker key={i} position={[data.coord.lat, data.coord.lon]}>
               <Tooltip permanent className="background">
                 <CustomTooltip data={data} />
               </Tooltip>

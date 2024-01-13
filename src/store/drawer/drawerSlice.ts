@@ -37,6 +37,6 @@ export const drawerSlice = createSlice({
 export const { setShowDrawer, setWeathers } = drawerSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
-export const selectDrawer = (state: RootState) => state.drawer;
+export const getDrawerSelector = (state: RootState) => state.drawer;
 
 export default drawerSlice.reducer;

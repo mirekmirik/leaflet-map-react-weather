@@ -8,7 +8,6 @@ import {
   Route,
   BrowserRouter as Router,
   Routes,
-  useSearchParams,
 } from "react-router-dom";
 import { ThemeProvider } from "../components/theme-provider";
 

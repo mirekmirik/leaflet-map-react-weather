@@ -1,9 +1,14 @@
 import { Button } from "src/components/ui/button/button";
 import { useAppDispatch, useAppSelector } from "src/store/hooks";
-import { toggleFormatTemperature } from "src/store/temperature/temperatureSlice";
+import {
+  getTemperatureSelector,
+  toggleFormatTemperature,
+} from "src/store/temperature/temperatureSlice";
 
 function ButtonTempToggle() {
-  const { temperature } = useAppSelector((state) => state);
+  const temperature = useAppSelector((rootState) =>
+    getTemperatureSelector(rootState)
+  );
   const dispatch = useAppDispatch();
 
   return (

@@ -25,6 +25,6 @@ export const searchSlice = createSlice({
 export const { setShowInput } = searchSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
-export const selectSearchInput = (state: RootState) => state.searchInput;
+export const getSearchInputSelector = (state: RootState) => state.searchInput;
 
 export default searchSlice.reducer;

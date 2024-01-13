@@ -1,7 +1,4 @@
 
-// const url =
-//   "https://test.api.amadeus.com/v1/reference-data/locations/cities?countryCode=FR&keyword=PARIS&max=10&include=";
-
 import { SearchCitiesFetch } from "./types";
 
 const searchCitiesLink = (
@@ -12,8 +9,6 @@ const searchCitiesLink = (
 
 export const searchCities = async (
   cityStartsWith: string,
-  maxSymbols: number = 7,
-  countryCode?: string
 ): Promise<SearchCitiesFetch> => {
   try {
     const response = await fetch(searchCitiesLink(cityStartsWith), {

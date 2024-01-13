@@ -1,3 +1,4 @@
+![image](https://github.com/mirekmirik/leaflet-map-react-weather/assets/68910679/d57d3645-64fb-47a8-9c8f-18bff124dfdc)
 ![image](https://github.com/mirekmirik/leaflet-map-react-weather/assets/68910679/bdbac11e-609a-41c6-b498-79c484ef642c)
 ![image](https://github.com/mirekmirik/leaflet-map-react-weather/assets/68910679/404f846b-0d69-41d3-bece-b0c4e9d4d2d4)
 ![image](https://github.com/mirekmirik/leaflet-map-react-weather/assets/68910679/1c534ab8-0e58-4c21-8633-89fbe412393b)

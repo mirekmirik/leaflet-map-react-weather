@@ -1,4 +1,4 @@
-import { SetStateAction, useEffect, useMemo, useState } from "react";
+import { SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   MapContainer,
@@ -23,6 +23,10 @@ import SearchCities from "../SearchCities/SearchCities";
 import { useTheme } from "../theme-provider";
 import { getFetchWeather } from "src/api/weather/weather";
 import { WeatherOfPlace } from "src/api/weather/types";
+import DrawerWeather from "../Drawer/DrawerWeather";
+import { useAppDispatch } from "src/store/hooks";
+import { setShowDrawer } from "src/store/drawer/drawerSlice";
+import ButtonTempToggle from "../ButtonTempToggle/ButtonTempToggle";
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
@@ -38,6 +42,7 @@ const Map = () => {
   const [geoJSON, setGeoJSON] = useState(UkraineBorders as GeoJsonObject);
   const [weatherOfCities, setWeatherOfCities] = useState<WeatherOfPlace[]>([]);
   const [isTransformed, setIsTransformed] = useState(false);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     getInitialFetchWeather();
@@ -71,18 +76,21 @@ const Map = () => {
     return zoom;
   }, [isTransformed]);
 
-  const mapPolygonColorToDensity = (density: number) => {
-    return density >= 10
-      ? "#ffffcc"
-      : density >= 5
-      ? "#c7e9b4"
-      : density >= 0
-      ? "#7fcdbb"
-      : density >= -5
-      ? "#41b6c4"
-      : density >= -10
-      ? "#2c7fb8"
-      : "#253494";
+  const mapPolygonColorToDensity = (temp: number) => {
+    const density = Number(temp?.toFixed(0));
+    if (density <= -10) {
+      return "#2c7fb8";
+    } else if (density <= -5) {
+      return "#41b6c4";
+    } else if (density <= 0) {
+      return "#7fcdbb";
+    } else if (density <= 5) {
+      return "#c7e9b4";
+    } else if (density <= 10) {
+      return "#ffffcc";
+    } else {
+      return "#fff";
+    }
   };
 
   const style = (feature: any) => {
@@ -90,7 +98,7 @@ const Map = () => {
       fillColor: mapPolygonColorToDensity(feature.temp),
       weight: 1,
       opacity: 1,
-      color: theme === 'light' ? 'black' : '#bebebe',
+      color: theme === "light" ? "black" : "#bebebe",
       dashArray: "2",
       fillOpacity: 0.5,
     };
@@ -458,11 +466,15 @@ const Map = () => {
     setWeatherOfCities(weatherData);
   };
 
+  const addNewPlace = (place: WeatherOfPlace) => {
+    setWeatherOfCities((prev) => [...prev, place]);
+  };
+
   const actionAfterClickOnPlace = async (e: L.LeafletMouseEvent) => {
     const { lat, lng } = e.latlng;
     try {
       const weather = await getFetchWeather(lat, lng);
-      setWeatherOfCities((prev) => [...prev, weather]);
+      addNewPlace(weather);
     } catch (err: any) {
       toast({
         title: "Error",
@@ -490,16 +502,26 @@ const Map = () => {
         zoom,
       });
     });
-
     useMapEvent("click", async (e) => {
+      L.DomEvent.stopPropagation(e);
       await actionAfterClickOnPlace(e);
+      dispatch(setShowDrawer(true));
     });
     return <span></span>;
   };
 
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current) {
+      L.DomEvent.disableClickPropagation(ref.current);
+    }
+  });
+
   return (
     <div className="flex flex-row h-screen w-full">
       <MapContainer
+        id="leaflet-map"
         center={initialUrlPosition}
         zoom={initialUrlZoom}
         scrollWheelZoom={true}
@@ -519,7 +541,7 @@ const Map = () => {
 
         {geoJSON && isTransformed && <GeoJSON data={geoJSON} style={style} />}
         <MovingMarker />
-        {weatherOfCities.map((data) => {
+        {weatherOfCities?.map((data) => {
           return (
             <Marker position={[data.coord.lat, data.coord.lon]}>
               <Tooltip permanent className="background">
@@ -528,22 +550,24 @@ const Map = () => {
             </Marker>
           );
         })}
-      </MapContainer>
-      <div className="w-1/5 px-1 py-1 flex flex-col gap-2">
-        <div>
-          <ModeToggle />
+        {weatherOfCities[weatherOfCities.length - 1] && (
+          <DrawerWeather
+            weatherOfPlace={weatherOfCities[weatherOfCities.length - 1]}
+          />
+        )}
+        <div
+          className="px-1 py-1 flex flex-row justify-end w-full gap-2 z-[70000] absolute"
+          ref={ref}
+        >
+          <div className="h-full flex items-center gap-3">
+            <ButtonTempToggle />
+            <ModeToggle />
+          </div>
+          <SearchCities onAddNewPlace={addNewPlace} />
         </div>
-        <SearchCities />
-      </div>
+      </MapContainer>
     </div>
   );
 };
 
 export default Map;
-
-{
-  /* <TileLayer
-          attribution='&copy; <a href=\"https://www.jawg.io?utm_medium=map&utm_source=attribution\" target=\"_blank\">&copy; Jawg</a> - <a href=\"https://www.openstreetmap.org?utm_medium=map-attribution&utm_source=jawg\" target=\"_blank\">&copy; OpenStreetMap</a>&nbsp;contributors'
-          url="https://tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token=mPcYxRF0lmzqDT661aLMCodVtEGrE2OqIT2UI8CfqXkC0vHNA88o594WewcsxABH"
-        /> */
-}

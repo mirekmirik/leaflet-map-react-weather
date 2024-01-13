@@ -6,6 +6,16 @@ import CitiesList from "./CitiesList";
 import { SearchCitiesFetch } from "src/api/searchCities/types";
 import { SkeletonCity } from "../ui/skeleton/Skeleton";
 import { Separator } from "../ui/separator/separator";
+import { WeatherOfPlace } from "src/api/weather/types";
+import { useAppDispatch, useAppSelector } from "src/store/hooks";
+import {
+  setShowInput,
+} from "src/store/searchInput/searchInputSlice";
+import { setShowDrawer } from "src/store/drawer/drawerSlice";
+
+interface SearchCitiesProps {
+  onAddNewPlace: (place: WeatherOfPlace) => void;
+}
 
 const initialState: SearchCitiesFetch = {
   data: [],
@@ -13,12 +23,15 @@ const initialState: SearchCitiesFetch = {
   metadata: [],
 };
 
-const SearchCities = () => {
+const SearchCities: React.FC<SearchCitiesProps> = ({ onAddNewPlace }) => {
   const { toast } = useToast();
   const [word, setWord] = useState<string>("");
   const [cities, setCities] = useState<SearchCitiesFetch>(initialState);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const isWasTypingRef = useRef<boolean>(false);
+  const dispatch = useAppDispatch();
+  const { isShowInput } = useAppSelector((state) => state.searchInput);
 
   useEffect(() => {
     if (!word.trim().length) {
@@ -42,13 +55,27 @@ const SearchCities = () => {
     }, 1000);
     return () => clearTimeout(delayDebounceFn);
   }, [word]);
+  
+  const hideInput = () => {
+    dispatch(setShowInput(true));
+    dispatch(setShowDrawer(false));
+  };
 
   return (
-    <div>
+    <div className="search-cities" id="search-cities">
       <Command className="rounded-lg border shadow-md">
-        <CommandInput onValueChange={(e) => setWord(e)} placeholder="Search" />
-        {isWasTypingRef.current && !isLoading ? (
-          <CitiesList cities={cities.data} />
+        <CommandInput
+          onClick={hideInput}
+          onValueChange={(e) => setWord(e)}
+          placeholder="Search"
+          id="search"
+          data-value="search-cities"
+        />
+        {isWasTypingRef.current && !isLoading && isShowInput ? (
+          <CitiesList
+            cities={cities.data}
+            onAddNewPlace={onAddNewPlace}
+          />
         ) : null}
         {isLoading &&
           Array.from({ length: 5 }, (_, i) => (

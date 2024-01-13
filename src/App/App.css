@@ -12,6 +12,10 @@
   border: none !important;
 }
 
+body {
+  pointer-events: auto !important;
+}
+
 /* .inner-tooltip {
   display: flex;
   flex-direction: column;

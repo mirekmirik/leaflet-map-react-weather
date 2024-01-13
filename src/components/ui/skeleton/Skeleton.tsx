@@ -15,7 +15,7 @@ function Skeleton({
 }
 
 export const SkeletonCity = () => {
-  return <Skeleton className="h-4 w-[250px] my-2" />;
+  return <Skeleton className="h-4 my-2" />;
 };
 
 export const SkeletonWeather = () => {

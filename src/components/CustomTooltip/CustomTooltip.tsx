@@ -1,9 +1,7 @@
 import { WeatherOfPlace } from "src/api/weather/types";
-import { WeatherOfCity } from "../../data/types";
-import { toFixedTemp } from "../../helpers/helpers";
+import TemperatureConverter from "src/helpers/TemperatureConverter";
 
 interface CustomTooltipProps {
-  // data: WeatherOfCity;
   data: WeatherOfPlace;
 }
 
@@ -16,7 +14,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ data }) => {
           src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`}
           width={40}
         />
-        <p>{toFixedTemp(data.main.temp)}</p>
+        <TemperatureConverter temp={data.main.temp} />
       </div>
     </div>
   );

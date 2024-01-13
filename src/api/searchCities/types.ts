@@ -9,8 +9,8 @@ export type CitiesFetch = {
   region: string;
   regionCode: string;
   regionWdId: string;
-  latitude: string;
-  longitude: string;
+  latitude: number;
+  longitude: number;
 };
 export type LinksFetch = {
   rel: string;

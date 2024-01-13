@@ -31,7 +31,6 @@ export const searchCities = async (
     const data = await response.json();
     return data;
   } catch (err: any) {
-    console.log("err", err.message);
     throw err.message;
   }
 };

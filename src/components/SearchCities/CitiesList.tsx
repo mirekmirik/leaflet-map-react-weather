@@ -3,12 +3,14 @@ import { ScrollArea } from "../ui/scroll-area/scroll-area";
 import { Separator } from "../ui/separator/separator";
 import City from "./City";
 import { CitiesFetch } from "src/api/searchCities/types";
+import { WeatherOfPlace } from "src/api/weather/types";
 
 interface CitiesListProps {
   cities: CitiesFetch[];
+  onAddNewPlace: (place: WeatherOfPlace) => void;
 }
 
-const CitiesList: React.FC<CitiesListProps> = ({ cities }) => {
+const CitiesList: React.FC<CitiesListProps> = ({ cities, onAddNewPlace }) => {
   return cities.length ? (
     <ScrollArea className="h-72 w-full rounded-md border py-2 px-2">
       {cities.map((city) => {
@@ -19,6 +21,9 @@ const CitiesList: React.FC<CitiesListProps> = ({ cities }) => {
               city={city.city}
               country={city.country}
               id={city.id}
+              longitude={city.longitude}
+              latitude={city.latitude}
+              onAddNewPlace={onAddNewPlace}
             />
             <Separator className="my-2" />
           </>

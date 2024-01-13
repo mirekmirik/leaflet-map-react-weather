@@ -62,7 +62,7 @@ export const locationsOfCities: LocationsOfCitiesProps = [
       lng: 24.7102,
     },
     {
-      name: "Uzhgorod",
+      name: "Uzhhorod",
       lat: 48.6154,
       lng: 22.2808,
     },

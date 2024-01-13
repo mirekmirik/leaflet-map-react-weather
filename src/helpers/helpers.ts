@@ -1,16 +1,14 @@
-// const API_WEATHER = "690b4fa678cee76b84579c3cd01978b8";
-
-type GetCurrentWeatherApiProps = (lat: number, lng: number) => string;
-
-export const getCurrentWeatherApi: GetCurrentWeatherApiProps = (
-  lat: number,
-  lng: number
-) => {
-  return `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&lang=uk&units=metric&appid=${process.env.REACT_APP_API_WEATHER}`;
-};
-
+import moment from 'moment'
 
 export const toFixedTemp = (temp: number) => {
   const fixedTemp = Number(temp.toFixed(0));
-  return fixedTemp > 0 ? `+${fixedTemp}` : fixedTemp;
+  return `${fixedTemp} °C`;
 };
+
+export const toFahrenheitTemp = (temp: number) => {
+  return (temp * 9.0) / 5.0 + 32.0;
+};
+
+export const toFormatDateByMoment = (date: string) => {
+  return moment(date).format('dddd')
+}

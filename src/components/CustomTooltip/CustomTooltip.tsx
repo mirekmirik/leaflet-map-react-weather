@@ -13,6 +13,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ data }) => {
         <img
           src={`https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`}
           width={40}
+          alt={data.weather[0].main}
         />
         <TemperatureConverter temp={data.main.temp} />
       </div>

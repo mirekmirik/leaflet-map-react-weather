@@ -16,22 +16,6 @@ body {
   pointer-events: auto !important;
 }
 
-/* .inner-tooltip {
-  display: flex;
-  flex-direction: column;
-}
-
-.weather-tooltip {
-  display: flex;
-  column-gap: 3px;
-}
-
-.stat-tooltip {
-  display: flex;
-  column-gap: 3px;
-  align-items: center;
-} */
-
 .myCSSClass {
   background: green;
   border: 2px solid cyan;

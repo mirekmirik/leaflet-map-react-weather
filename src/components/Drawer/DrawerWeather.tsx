@@ -25,7 +25,6 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "../ui/carousel/carousel";
-import { UNSAFE_DataRouterStateContext } from "react-router-dom";
 
 interface DrawerWeatherProps {
   weatherOfPlace: WeatherOfPlace;

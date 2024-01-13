@@ -3,9 +3,7 @@ import { MainInfoOfWeather } from "src/api/weather/types";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
-  CardTitle,
 } from "src/components/ui/card/Card";
 import TemperatureConverter from "src/helpers/TemperatureConverter";
 
